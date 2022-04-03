@@ -2,16 +2,20 @@ import express, { Application } from 'express';
 import cors from 'cors';
 
 import dbConnection from '../Database/config';
+import { productRoutes } from '../Routes/Index';
 
 class Server {
     private app: Application;
     private port: string;
+    private apiPaths = { 
+        product:  '/api/productos', 
+    }
 
     constructor() {
         this.app = express();
         this.port = process.env.PORT || '4000';
 
-        // * Conectar a base de datos
+        // * Connect to database
         this.connectDB();
 
         // * Middlewares
@@ -26,8 +30,12 @@ class Server {
         // * Cors
         this.app.use( cors() );
 
-        // * Lectura y parseo del body
+        // * Reading and parsing of the body
         this.app.use( express.json() );
+    }
+
+    routes() {
+        this.app.use( this.apiPaths.product, productRoutes );
     }
 
     listen() {
