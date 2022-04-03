@@ -1,10 +1,5 @@
-import { Schema, model, Types } from 'mongoose';
-
-interface Categoria {
-    nombre: string;
-    estado: boolean;
-    usuario: Types.ObjectId;
-}
+import { Schema, model } from 'mongoose';
+import Categoria from '../interfaces/Categoria';
 
 const CategoriaSchema = new Schema<Categoria>({
     nombre: {
