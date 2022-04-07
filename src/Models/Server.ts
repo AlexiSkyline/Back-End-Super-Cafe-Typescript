@@ -8,7 +8,7 @@ class Server {
     private app: Application;
     private port: string;
     private apiPaths = { 
-        product:  '/api/productos', 
+        product:  '/api/products', 
     }
 
     constructor() {
@@ -20,6 +20,9 @@ class Server {
 
         // * Middlewares
         this.middlewares();
+
+        // * Routes
+        this.routes();
     }
 
     async connectDB() {
