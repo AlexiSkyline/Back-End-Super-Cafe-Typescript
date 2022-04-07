@@ -1,9 +1,10 @@
 import { Router } from 'express';
+import ProductController from '../Controller/Products';
 
 const router = Router();
 
 // ? Get all Products - Public
-router.get( '/' );
+router.get( '/', ProductController.getProducts );
 
 // ? Get Product by ID - Public
 router.get( '/:id' );

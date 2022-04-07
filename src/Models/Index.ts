@@ -3,16 +3,16 @@
     * so that we only add references to a single file
     * when we want to import more than 1 file from the "Models" folder.
 */
-import Categoria from './Category';
-import Producto from './Product';
+import Category from './Category';
+import Product from './Product';
 import Role from './Role';
 import Server from './Server';
-import Usuario from './User';
+import User from './User';
 
 export {
-    Categoria,
-    Producto,
+    Category,
+    Product,
     Role,
     Server,
-    Usuario
+    User
 }
