@@ -2,7 +2,7 @@ import express, { Application } from 'express';
 import cors from 'cors';
 
 import dbConnection from '../Database/config';
-import { productRoutes } from '../Routes/Index';
+import { ProductsRoutes } from '../Routes/Index';
 
 class Server {
     private app: Application;
@@ -38,7 +38,7 @@ class Server {
     }
 
     routes() {
-        this.app.use( this.apiPaths.product, productRoutes );
+        this.app.use( this.apiPaths.product, ProductsRoutes );
     }
 
     listen() {
