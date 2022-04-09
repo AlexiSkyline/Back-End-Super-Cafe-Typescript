@@ -31,6 +31,19 @@ class DBValidator {
             throw new Error( `The email '${ email }' is already registered` );
         }
     }
+
+    /*
+        * find the user by @params id and validate if the user exists
+        * @method: findUserById
+        * @params id: string - id of the user to validate and find in the database
+    */
+    public static async findUserById( id: string ): Promise<void> {
+        // Todo: check if the user exists
+        const existUser = await UserSchema.findById( id );
+        if( !existUser ) {
+            throw new Error( `The user with the id '${ id }' does not exist in the database` );
+        }
+    }
 }
 
 export default DBValidator;
