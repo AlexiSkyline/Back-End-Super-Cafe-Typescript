@@ -57,6 +57,19 @@ class DBValidator {
             throw new Error( `The category with the id '${ id }' does not exist in the database` );
         }
     }
+
+    /*
+        * find the Product by @params id and validate if the Product exists
+        * @method: findProductById
+        * @params id: string - id of the Product to validate and find in the database
+    */
+    public static async findProductById( id: string ): Promise<void> {
+        // Todo: check if the Product exists
+        const existProdut = await ProductSchema.findById( id );
+        if( !existProdut ) {
+            throw new Error( `The product with the id '${ id }' does not exist in the database` );
+        }
+    }
 }
 
 export default DBValidator;
