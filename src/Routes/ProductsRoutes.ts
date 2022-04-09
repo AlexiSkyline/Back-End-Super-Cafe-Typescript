@@ -1,4 +1,5 @@
 import { Router } from 'express';
+
 import ProductController from '../Controller/Products';
 
 class ProductsRoutes {

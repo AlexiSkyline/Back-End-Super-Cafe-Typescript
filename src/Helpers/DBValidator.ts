@@ -1,5 +1,4 @@
 import { RoleSchema, UserSchema, CategorySchema, ProductSchema } from '../Models/Index';
-
 /*
     * is a class that contains all the methods to validate the data 
     * @Class: DBValidators

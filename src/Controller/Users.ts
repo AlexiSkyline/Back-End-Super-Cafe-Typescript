@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+
 import bcryptjs from 'bcryptjs';
 import UserSchema from '../Models/User';
 import IUser from '../Interfaces/User';

@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
 import { validationResult } from 'express-validator';
-
 /*
     * is a class that contains all the methods to validate the data sent by the user 
     * @Class: ValidateInput
