@@ -14,16 +14,18 @@ class UsersRoutes {
 
     routers() {
         this.router.post( '/', 
-        [
-            check( 'name', 'The name is required' ).not().isEmpty(),
-            check( 'email', 'The email is not valid' ).isEmail(),
-            check( 'email' ).custom( DBValidator.findEmail ),
-            check( 'password', 'The password must be at least 6 characters long' ).isLength({ min: 6 }),
-            check( 'rol' ).custom( DBValidator.isValidRole ),
-            ValidateInput.validateFields
-        ],
-        UsersController.createUser );
-        this.router.get( '/' );
+            [
+                check( 'name', 'The name is required' ).not().isEmpty(),
+                check( 'email', 'The email is not valid' ).isEmail(),
+                check( 'email' ).custom( DBValidator.findEmail ),
+                check( 'password', 'The password must be at least 6 characters long' ).isLength({ min: 6 }),
+                check( 'rol' ).custom( DBValidator.isValidRole ),
+                ValidateInput.validateFields
+            ],
+            UsersController.createUser 
+        );
+
+        this.router.get( '/', UsersController.getUsers );
         this.router.put( '/:id' );
         this.router.delete( '/:id' );
     }

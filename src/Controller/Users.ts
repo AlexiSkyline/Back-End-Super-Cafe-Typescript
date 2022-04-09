@@ -7,22 +7,13 @@ import IUser from '../Interfaces/User';
 class Users {
     public static async createUser( req: Request, res: Response ) {
         const { name, email, password, rol } = req.body;
-        try {
-            const findUser: IUser | null = await UserSchema.findOne({ email });
-            if( findUser ) {
-                return res.status(400).json({
-                    ok: false,
-                    message: `The email ${ email } is already registered`
-                });
-            }
-        } catch (error) {
-            return res.status(500).json({ ok: false, message: 'Error looking up user' });
-        }
 
         try {
-            let newUser: IUser | any = new UserSchema({ name, email, password, rol });
+            let newUser: IUser | any = new UserSchema({ name, email, password, rol });            
             // ? Encrypt the password
-            newUser.password = this.EncryptPassword( newUser.password, newUser );
+            const salt = bcryptjs.genSaltSync();
+            newUser.password = bcryptjs.hashSync( password, salt );
+            
             // ? Save the user
             await newUser.save();
 
@@ -32,12 +23,20 @@ class Users {
         }
     }
 
-    private static async EncryptPassword( password: string, user: IUser ): Promise<string> {
-        // ? Encrypt the password
-        const salt = bcryptjs.genSaltSync();
-        user.password = bcryptjs.hashSync( password, salt );
-        
-        return user.password
+    public static async getUsers( req: Request, res: Response ) {
+        const { limit = 10, from = 1 } = req.query;
+        const query = { status: true };
+
+        try {
+            const [ total, users ] = await Promise.all([
+                UserSchema.countDocuments( query ),
+                UserSchema.find( query ).skip( Number( from ) - 1 ).limit( Number( limit ) )
+            ]);
+
+            return res.status(200).json({ ok: true, total, users });
+        } catch (error) {
+            return res.status(500).json({ ok: false, message: 'Failed to get users' });
+        }
     }
 }
 
