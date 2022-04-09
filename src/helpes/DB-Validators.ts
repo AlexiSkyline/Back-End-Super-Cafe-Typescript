@@ -44,6 +44,19 @@ class DBValidator {
             throw new Error( `The user with the id '${ id }' does not exist in the database` );
         }
     }
+
+    /*
+        * find the Category by @params id and validate if the Category exists
+        * @method: findCategoryById
+        * @params id: string - id of the category to validate and find in the database
+    */
+    public static async findCategoryById( id: string ): Promise<void> {
+        // Todo: check if the Category exists
+        const existCategory = await CategorySchema.findById( id );
+        if( !existCategory ) {
+            throw new Error( `The category with the id '${ id }' does not exist in the database` );
+        }
+    }
 }
 
 export default DBValidator;
