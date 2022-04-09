@@ -70,6 +70,22 @@ class DBValidator {
             throw new Error( `The product with the id '${ id }' does not exist in the database` );
         }
     }
+
+    /*
+        * We validate @params collection the allowed collections in a given list
+        * @method: isValidCollection
+        * @params collection: string - collection find in the Collections list
+    */
+    public static async allowedCollections( collection: string, collections: string[] ): Promise<Boolean> {
+        // Todo: check if the collection exists in the list of allowed collections
+        const included = collections.includes( collection );
+
+        if( !included ) {
+            throw new Error( `The collection '${ collection }' is not allowed, '${ collections }'` );
+        }
+
+        return true;
+    }
 }
 
 export default DBValidator;
