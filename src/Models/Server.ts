@@ -1,5 +1,8 @@
 import express, { Application } from 'express';
 import cors from 'cors';
+import morgan from 'morgan';
+import helmet from 'helmet';
+import compression from 'compression';
 
 import dbConnection from '../Database/config';
 import { ProductsRoutes, UserRoutes } from '../Routes/Index';
@@ -36,6 +39,12 @@ class Server {
 
         // * Reading and parsing of the body
         this.app.use( express.json() );
+
+        // * Setting
+        this.app.use( morgan( 'dev' ) );
+        this.app.use( express.json() );
+        this.app.use( helmet() );
+        this.app.use( compression() );
     }
 
     routes() {
