@@ -4,6 +4,7 @@ import { check } from 'express-validator';
 import UsersController from '../Controller/Users';
 import DBValidator from '../Helpers/DBValidator';
 import ValidateInput from '../Middlewares/ValidateInput';
+import ValidateRoles from '../Middlewares/ValidateRoles';
 
 class UsersRoutes {
     public router: Router;
@@ -29,14 +30,24 @@ class UsersRoutes {
 
         this.router.put( '/:id', 
             [
-                check( 'id', 'The id is invalid' ).isMongoId(),
+                check( 'id', 'The ID is invalid' ).isMongoId(),
                 check( 'id' ).custom( DBValidator.findUserById ),
                 check( 'rol' ).custom( DBValidator.isValidRole ),
                 ValidateInput.validateFields
             ],
             UsersController.updateUser 
         );
-        this.router.delete( '/:id' );
+
+        this.router.delete( '/:id', 
+            [
+                ValidateInput.validateJWT,
+                ValidateRoles.havePermission( 'ADMIN_ROLE', 'SALES_ROLE', 'USER_ROLE' ),
+                check( 'id', 'The ID is invalid' ).isMongoId(),
+                check( 'id' ).custom( DBValidator.findUserById ),
+                ValidateInput.validateFields
+            ],
+            UsersController.deleteUser
+        );
     }
 }
 

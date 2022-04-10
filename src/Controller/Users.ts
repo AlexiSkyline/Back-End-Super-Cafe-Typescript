@@ -57,6 +57,19 @@ class Users {
             return res.status(500).json({ ok: false, message: 'Failed to update user' });
         }
     }
+
+    public static async deleteUser( req: Request, res: Response ): Promise<Response> {
+        const { id } = req.params;
+
+        try {
+            // ? We change the state of the user
+            const userDisabled = await UserSchema.findByIdAndUpdate( id, { status: false }, { new: true } );
+            
+            return res.status(200).json({ ok: true, userDisabled });
+        } catch (error) {
+            return res.status(500).json({ ok: false, message: 'Failed to delete user' });
+        }
+    }
 }
 
 export default Users;
