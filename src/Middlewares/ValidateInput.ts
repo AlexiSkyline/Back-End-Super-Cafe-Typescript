@@ -1,5 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import { validationResult } from 'express-validator';
+import jwt from 'jsonwebtoken';
+
+import IUser from '../Interfaces/User';
+import { UserSchema } from '../Models/Index';
 /*
     * is a class that contains all the methods to validate the data sent by the user 
     * @Class: ValidateInput
@@ -37,6 +41,48 @@ class ValidateInput {
         }
 
         next();
+    }
+
+    /*
+        * We validate @params req check user token
+        * @method: validateJWT
+        * @params req: Request | any - user and token information
+        * @params res: Response - return the response with the status and the message
+        * @params next: NextFunction - call the next function
+    */
+    public static async validateJWT( req: Request | any, res: Response, nex: NextFunction ): Promise<Response | void> {
+        const toke = req.header( 'x-token' );
+
+        if( !toke ) {
+            return res.status( 401 ).json({ ok: false, message: 'There is no token in the request' });
+        }
+
+        try {
+            const { uid }: any = jwt.verify( toke, process.env.SECRET_JWT_SEED || 'secret' );
+            const user: IUser | null = await UserSchema.findById( uid );
+
+            if( !user ) {
+                return res.status( 401 ).json({ 
+                    ok: false, 
+                    message: 'Token is not valid - The User does not exist in the database' 
+                });
+            }
+
+            // ? Check if the user's uid has active status
+            if( !user.status ) {
+                return res.status( 401 ).json({ 
+                    ok: false, 
+                    message: 'Token is not valid - The User is not active' 
+                });
+            }
+
+            req.user = user;
+            req.uid  = uid;
+
+            nex();
+        } catch (error) {
+            return res.status( 401 ).json({ ok: false, message: 'The token is not valid' });
+        }
     }
 }
 
