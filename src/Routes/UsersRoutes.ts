@@ -26,7 +26,16 @@ class UsersRoutes {
         );
 
         this.router.get( '/', UsersController.getUsers );
-        this.router.put( '/:id' );
+
+        this.router.put( '/:id', 
+            [
+                check( 'id', 'The id is invalid' ).isMongoId(),
+                check( 'id' ).custom( DBValidator.findUserById ),
+                check( 'rol' ).custom( DBValidator.isValidRole ),
+                ValidateInput.validateFields
+            ],
+            UsersController.updateUser 
+        );
         this.router.delete( '/:id' );
     }
 }

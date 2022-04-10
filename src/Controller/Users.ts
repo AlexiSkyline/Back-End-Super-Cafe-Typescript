@@ -5,7 +5,7 @@ import UserSchema from '../Models/User';
 import IUser from '../Interfaces/User';
 
 class Users {
-    public static async createUser( req: Request, res: Response ) {
+    public static async createUser( req: Request, res: Response ): Promise<Response> {
         const { name, email, password, rol } = req.body;
 
         try {
@@ -23,7 +23,7 @@ class Users {
         }
     }
 
-    public static async getUsers( req: Request, res: Response ) {
+    public static async getUsers( req: Request, res: Response ): Promise<Response> {
         const { limit = 10, from = 1 } = req.query;
         const query = { status: true };
 
@@ -36,6 +36,25 @@ class Users {
             return res.status(200).json({ ok: true, total, users });
         } catch (error) {
             return res.status(500).json({ ok: false, message: 'Failed to get users' });
+        }
+    }
+
+    public static async updateUser( req: Request, res: Response ): Promise<Response> {
+        const { id } = req.params;
+        const { _id, password, google, correo, ...rest } = req.body;
+
+        // Todo: Validate against the database
+        if( password ) {
+            const salt = bcryptjs.genSaltSync();
+            rest.password = bcryptjs.hashSync( password, salt );
+        }
+
+        try {
+            const user = await UserSchema.findByIdAndUpdate( id, rest, { new: true } );
+
+            return res.status(200).json({ ok: true, user });
+        } catch (error) {
+            return res.status(500).json({ ok: false, message: 'Failed to update user' });
         }
     }
 }
