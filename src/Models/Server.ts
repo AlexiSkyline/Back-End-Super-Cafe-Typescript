@@ -41,9 +41,11 @@ class Server {
         // * Reading and parsing of the body
         this.app.use( express.json() );
 
+        // * Directory for static files
+        this.app.use( express.static( 'public' ) );
+
         // * Setting
         this.app.use( morgan( 'dev' ) );
-        this.app.use( express.json() );
         this.app.use( helmet() );
         this.app.use( compression() );
     }
