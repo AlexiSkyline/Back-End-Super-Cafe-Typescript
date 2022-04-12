@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
 import bcryptjs from 'bcryptjs';
 
-import IUser from '../Interfaces/User';
 import { UserSchema } from '../Models/Index';
+import GeneratorJWT from '../Helpers/GeneratorJWT';
 
 class Auth {
     public static async Login( req: Request, res: Response ): Promise<Response> {
@@ -10,7 +10,7 @@ class Auth {
 
         try {
             // * Check if the email exists
-            const user: IUser | null = await UserSchema.findOne({ email });
+            const user = await UserSchema.findOne({ email });
             if( !user ) {
                 return res.status(400).json({
                     ok: false,
@@ -34,10 +34,14 @@ class Auth {
                     message: 'User / Password incorrect - Password is incorrect'
                 });
             }
+            
+            // * Generate the token
+            const token = await GeneratorJWT.generateToken( user.id );
 
             return res.status(200).json({ 
                 ok: true,
-                user
+                user,
+                token
             });
         } catch (error) {
             return res.status(500).json({ ok: false, message: 'Failed to login' });
