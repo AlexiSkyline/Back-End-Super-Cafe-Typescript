@@ -5,12 +5,13 @@ import helmet from 'helmet';
 import compression from 'compression';
 
 import dbConnection from '../Database/config';
-import { ProductsRoutes, UserRoutes } from '../Routes/Index';
+import { AuthRoutes, ProductsRoutes, UserRoutes } from '../Routes/Index';
 
 class Server {
     private app: Application;
     private port: string;
-    private apiPaths = { 
+    private apiPaths = {
+        auth:    '/api/auth',
         product: '/api/products',
         user:    '/api/users'
     }
@@ -48,6 +49,7 @@ class Server {
     }
 
     routes() {
+        this.app.use( this.apiPaths.auth, AuthRoutes );
         this.app.use( this.apiPaths.product, ProductsRoutes );
         this.app.use( this.apiPaths.user, UserRoutes );
     }
