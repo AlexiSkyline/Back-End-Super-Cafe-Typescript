@@ -1,4 +1,8 @@
 import { Router } from 'express';
+import { check } from 'express-validator';
+
+import Auth from '../Controller/Auth';
+import ValidateInput from '../Middlewares/ValidateInput';
 
 class AuthRoutes {
     public router: Router;
@@ -8,7 +12,14 @@ class AuthRoutes {
     }
 
     routes() {
-        this.router.post( '/login' );
+        this.router.post( '/login', 
+            [
+                check( 'email', 'Email is required' ).not().isEmpty(),
+                check( 'password', 'Password is required' ).not().isEmpty(),
+                ValidateInput.validateFields
+            ],
+            Auth.Login 
+        );
         this.router.post( '/google' );
     }
 }
