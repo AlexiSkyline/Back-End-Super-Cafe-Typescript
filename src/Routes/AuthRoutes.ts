@@ -20,7 +20,14 @@ class AuthRoutes {
             ],
             Auth.Login 
         );
-        this.router.post( '/google' );
+
+        this.router.post( '/google',
+            [
+                check( 'id_token', 'The id_token is required' ).not().isEmpty(),
+                ValidateInput.validateFields
+            ],
+            Auth.googleSignIn
+        );
     }
 }
 
