@@ -42,7 +42,7 @@ class Server {
         this.app.use( express.json() );
 
         // * Directory for static files
-        this.app.use( express.static( 'public' ) );
+        this.app.use( express.static( './src/Public' ) );
 
         // * Setting
         this.app.use( morgan( 'dev' ) );

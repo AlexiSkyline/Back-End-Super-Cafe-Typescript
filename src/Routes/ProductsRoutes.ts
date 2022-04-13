@@ -11,13 +11,13 @@ class ProductsRoutes {
 
     routes() {
         // ? Get all Products - Public
-        this.router.get( '/', ProductController.GetProducts );
+        this.router.get( '/', ProductController.getProducts );
 
         // ? Get Product by ID - Public
         this.router.get( '/:id' );
 
         // ? Create Product - Private - Anyone with a valid token
-        this.router.post( '/', ProductController.CreateProduct );
+        this.router.post( '/', ProductController.createProduct );
 
         // ? Update Product - Private - Anyone with a valid token
         this.router.put( '/:id' );
