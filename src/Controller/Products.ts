@@ -72,6 +72,22 @@ class Product {
             return res.status(500).json({ ok: false, message: 'There was an error updating the product' });
         }      
     }
+
+    public static async deleteProduct( req: Request, res: Response ): Promise<Response> {
+        const { id } = req.params;
+
+        try {
+            const productDB = await ProductSchema.findById( id );
+            if( !productDB?.status ) {
+                return res.status(400).json({ ok: false, message: `Product with name:"${ productDB?.name }" already exists` });
+            }
+
+            const product = await ProductSchema.findByIdAndUpdate( id, { status: false }, { new: true });
+            return res.status(201).json({ ok: false, product });
+        } catch (error) {
+            return res.status(500).json({ ok: false, message: 'There was an error deleting the product' });
+        }
+    }
 }
 
 export default Product;
