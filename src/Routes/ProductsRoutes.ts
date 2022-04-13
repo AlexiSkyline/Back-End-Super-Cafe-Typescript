@@ -32,7 +32,15 @@ class ProductsRoutes {
         );
 
         // ? Update Product - Private - Anyone with a valid token
-        this.router.put( '/:id' );
+        this.router.put( '/:id', 
+            [
+                ValidateInput.validateJWT,
+                check( 'id', 'The ID is invalid' ).isMongoId(),
+                check( 'id' ).custom( DBValidator.findProductById ),
+                ValidateInput.validateFields
+            ],
+            ProductController.updateProduct
+        );
 
         // ? Delete Product - Only with Administrator Permission
         this.router.delete( '/:id' );
