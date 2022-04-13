@@ -1,6 +1,9 @@
 import { Router } from 'express';
+import { check } from 'express-validator';
 
 import ProductController from '../Controller/Products';
+import ValidateInput from '../Middlewares/ValidateInput';
+import DBValidator from '../Helpers/DBValidator';
 
 class ProductsRoutes {
     public router: Router;
@@ -17,7 +20,16 @@ class ProductsRoutes {
         this.router.get( '/:id' );
 
         // ? Create Product - Private - Anyone with a valid token
-        this.router.post( '/', ProductController.createProduct );
+        this.router.post( '/', 
+            [
+                ValidateInput.validateJWT,
+                check( 'name', 'The name is riquired' ).not().isEmpty(),
+                check( 'category', 'The Category is invalid' ).isMongoId(),
+                check( 'category' ).custom( DBValidator.findCategoryById ),
+                ValidateInput.validateFields,
+            ],
+            ProductController.createProduct 
+        );
 
         // ? Update Product - Private - Anyone with a valid token
         this.router.put( '/:id' );

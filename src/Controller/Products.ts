@@ -22,7 +22,7 @@ class Product {
 
     public static async createProduct( req: any, res: Response ): Promise<Response> { 
         const { status, user, ...body } = req.body;
-        body.name = body.nombre.toUppercase();
+        body.name = body.name.toUpperCase();
         
         try {
             let product: IProduct | null = await ProductSchema.findOne({ name: body.name });
@@ -53,7 +53,7 @@ class Product {
         const { status, user, ...data } = req.body;
 
         if( data.name ) {
-            data.name = data.name.toUppercase();
+            data.name = data.name.toUpperCase();
         }
         data.user = req.user._id;
 
