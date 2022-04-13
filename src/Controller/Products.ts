@@ -83,7 +83,7 @@ class Product {
             }
 
             const product = await ProductSchema.findByIdAndUpdate( id, { status: false }, { new: true });
-            return res.status(201).json({ ok: false, product });
+            return res.status(201).json({ ok: true, product });
         } catch (error) {
             return res.status(500).json({ ok: false, message: 'There was an error deleting the product' });
         }

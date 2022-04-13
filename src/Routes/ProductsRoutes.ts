@@ -4,6 +4,7 @@ import { check } from 'express-validator';
 import ProductController from '../Controller/Products';
 import ValidateInput from '../Middlewares/ValidateInput';
 import DBValidator from '../Helpers/DBValidator';
+import ValidateRoles from '../Middlewares/ValidateRoles';
 
 class ProductsRoutes {
     public router: Router;
@@ -43,7 +44,16 @@ class ProductsRoutes {
         );
 
         // ? Delete Product - Only with Administrator Permission
-        this.router.delete( '/:id' );
+        this.router.delete( '/:id', 
+            [
+                ValidateInput.validateJWT,
+                ValidateRoles.isAdmin,
+                check( 'id', 'The Id is invalid' ).isMongoId(),
+                check( 'id' ).custom( DBValidator.findProductById ),
+                ValidateInput.validateFields
+            ],
+            ProductController.deleteProduct
+        );
     }
 }
 
