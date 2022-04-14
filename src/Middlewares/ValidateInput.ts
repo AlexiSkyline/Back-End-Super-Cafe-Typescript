@@ -51,14 +51,14 @@ class ValidateInput {
         * @params next: NextFunction - call the next function
     */
     public static async validateJWT( req: Request | any, res: Response, nex: NextFunction ): Promise<Response | void> {
-        const toke = req.header( 'x-token' );
+        const token = req.header( 'x-token' );
 
-        if( !toke ) {
+        if( !token ) {
             return res.status( 401 ).json({ ok: false, message: 'There is no token in the request' });
         }
 
         try {
-            const { uid }: any = jwt.verify( toke, process.env.SECRET_JWT_SEED || 'secret' );
+            const { uid }: any = jwt.verify( token, process.env.SECRET_JWT_SEED || 'secret' );
             const user: IUser | null = await UserSchema.findById( uid );
 
             if( !user ) {
