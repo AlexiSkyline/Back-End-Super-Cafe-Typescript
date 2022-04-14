@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import CategoryController from '../Controller/Category';
 
 class CategoryRoutes {
     public router: Router;
@@ -10,7 +11,7 @@ class CategoryRoutes {
 
     routes() {
         // ? Get all categories - public
-        this.router.get( '/' );
+        this.router.get( '/', CategoryController.getCategories );
 
         // ? Get category by ID - public
         this.router.get( '/:id' );
