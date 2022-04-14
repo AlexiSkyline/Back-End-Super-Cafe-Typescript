@@ -28,7 +28,14 @@ class CategoryRoutes {
         );
 
         // ? Create category - Private - Anyone with a valid token
-        this.router.post( '/' );
+        this.router.post( '/',
+            [
+                ValidateInput.validateJWT,
+                check( 'name', 'The name is required' ).not().isEmpty(),
+                ValidateInput.validateFields
+            ],
+            CategoryController.createCategory
+        );
 
         // ? Update category - Private - Anyone with a valid token
         this.router.put( '/:id' );
