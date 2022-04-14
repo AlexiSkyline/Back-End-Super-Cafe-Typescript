@@ -4,6 +4,7 @@ import { check } from 'express-validator';
 import CategoryController from '../Controller/Category';
 import DBValidator from '../Helpers/DBValidator';
 import ValidateInput from '../Middlewares/ValidateInput';
+import ValidateRoles from '../Middlewares/ValidateRoles';
 
 class CategoryRoutes {
     public router: Router;
@@ -50,7 +51,16 @@ class CategoryRoutes {
         );
 
         // ? Delete category - Only with administrator permission
-        this.router.delete( '/:id' );
+        this.router.delete( '/:id', 
+            [
+                ValidateInput.validateJWT,
+                ValidateRoles.isAdmin,
+                check( 'id', 'The ID is invalid' ).isMongoId(),
+                check( 'id' ).custom( DBValidator.findCategoryById ),
+                ValidateInput.validateFields
+            ],
+            CategoryController.deleteCategory
+        );
     }
 }
 
