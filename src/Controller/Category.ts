@@ -73,6 +73,30 @@ class Category {
             return req.status(500).json({ ok: false, message: 'Error creating category' });
         }
     }
+
+    public static async updateCategory( req: any, res: Response ): Promise<Response> {
+        const { id } = req.params;
+        const { status, user, ...data } = req.body;
+
+        data.name = data.name.toUpperCase();
+        // * Modify the information of the user who modified it
+        data.user = req.user._id;
+        
+        try {
+            const category = await CategorySchema.findByIdAndUpdate( id, { status: false }, { new: true });
+            if( !category ) {
+                return res.status(400).json({
+                    ok: false,
+                    message: `Error there is already a category with the name ${ data.name }`,
+                });
+             }
+            const categoryUpdate = await CategorySchema.findByIdAndUpdate( id, data, { new: true });
+
+            return res.status(201).json({ ok: true, category: categoryUpdate });
+        } catch (error) {
+            return res.status(500).json({ ok: false, message: 'Error updating category' });
+        }
+     }
 }
 
 export default Category;
