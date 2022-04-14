@@ -1,5 +1,9 @@
 import { Router } from 'express';
+import { check } from 'express-validator';
+
 import CategoryController from '../Controller/Category';
+import DBValidator from '../Helpers/DBValidator';
+import ValidateInput from '../Middlewares/ValidateInput';
 
 class CategoryRoutes {
     public router: Router;
@@ -14,7 +18,14 @@ class CategoryRoutes {
         this.router.get( '/', CategoryController.getCategories );
 
         // ? Get category by ID - public
-        this.router.get( '/:id' );
+        this.router.get( '/:id', 
+            [
+                check( 'id', 'ID is invalid' ).isMongoId(),
+                check( 'id' ).custom( DBValidator.findCategoryById ),
+                ValidateInput.validateFields
+            ],
+            CategoryController.getCategoryById
+        );
 
         // ? Create category - Private - Anyone with a valid token
         this.router.post( '/' );
