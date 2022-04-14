@@ -83,7 +83,7 @@ class Category {
         data.user = req.user._id;
         
         try {
-            const category = await CategorySchema.findByIdAndUpdate( id, { status: false }, { new: true });
+            const category = await CategorySchema.findOne({ name: data.name });
             if( !category ) {
                 return res.status(400).json({
                     ok: false,
@@ -96,7 +96,27 @@ class Category {
         } catch (error) {
             return res.status(500).json({ ok: false, message: 'Error updating category' });
         }
-     }
+    }
+
+    public static async deleteCategory( req: Request, res: Response ): Promise<Response> {
+        const { id } = req.params;
+
+        try {
+            let category = await CategorySchema.findById( id );
+
+            if( !category?.status ) {
+                return res.status(400).json({
+                    ok: false,
+                    message: 'Category is not active',
+                });
+            }
+            category = await CategorySchema.findByIdAndUpdate( id, { status: false }, { new: true });
+
+            return res.status(200).json({ ok: true, category });
+        } catch (error) {
+            return res.status(500).json({ ok: false, message: 'Error deleting category' });
+        }
+    }
 }
 
 export default Category;
