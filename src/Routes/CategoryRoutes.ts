@@ -38,7 +38,16 @@ class CategoryRoutes {
         );
 
         // ? Update category - Private - Anyone with a valid token
-        this.router.put( '/:id' );
+        this.router.put( '/:id', 
+            [
+                ValidateInput.validateJWT,
+                check( 'name', 'The name is required' ).not().isEmpty(),
+                check( 'id', 'The ID is invalid' ).isMongoId(),
+                check( 'id' ).custom( DBValidator.findCategoryById ),
+                ValidateInput.validateFields
+            ],
+            CategoryController.updateCategory
+        );
 
         // ? Delete category - Only with administrator permission
         this.router.delete( '/:id' );
