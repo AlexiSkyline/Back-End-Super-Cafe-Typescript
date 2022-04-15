@@ -1,6 +1,6 @@
 import { Response } from 'express';
 import { Types } from 'mongoose';
-import { UserSchema } from '../Models/Index';
+import { CategorySchema, UserSchema } from '../Models/Index';
 
 class Search {
     private static allowedCollections: string[] = [ 'users', 'category', 'products', 'roles' ];
@@ -23,5 +23,21 @@ class Search {
         });
 
         return res.status(201).json({ ok: true, resuts: users });
+    }
+
+    public static async searchCategory( term: string, res: Response ): Promise<Response> {
+        const isMongoID: boolean = Types.ObjectId.isValid( term );
+        if( isMongoID ) {
+            const category = await CategorySchema.findById( term );
+            return res.status(201).json({ 
+                ok: true,  
+                resuts: ( category ) ? [ category ] : []
+            });
+        }
+
+        const regex = new RegExp( term, 'i' );
+        const categories = await CategorySchema.find({ name: regex, status: true });
+
+        return res.status(201).json({ ok: true, resuts: categories });
     }
 }
