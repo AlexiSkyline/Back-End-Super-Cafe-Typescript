@@ -1,9 +1,37 @@
-import { Response } from 'express';
+import { Response, Request } from 'express';
 import { Types } from 'mongoose';
 import { CategorySchema, ProductSchema, UserSchema } from '../Models/Index';
 
 class Search {
     private allowedCollections: string[] = [ 'users', 'category', 'products', 'roles' ];
+
+    public selectsSearch( req: Request, res: Response ): Response | void {
+        const { collection, term } = req.params;
+
+        if( !this.allowedCollections.includes( collection ) ) {
+            return res.status(400).json({
+                ok: false,
+                message: `The allowed collections are: ${ this.allowedCollections }`
+            });
+        }
+
+        switch( collection ) {
+            case 'user':
+                this.searchUser( term, res );
+                break;
+            case 'category':
+                this.searchCategory( term, res );
+                break;
+            case 'products':
+                this.searchProduct( term, res );
+                break;
+            default: 
+                return res.status(500).json({ 
+                    ok: false, 
+                    message: `We couldn't search the collection: ${ term }`
+                });
+        }
+    }
 
     private async searchUser( term: string, res: Response ): Promise<Response> {
         const isMongoID: boolean = Types.ObjectId.isValid( term );
