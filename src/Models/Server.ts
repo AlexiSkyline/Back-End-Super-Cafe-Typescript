@@ -5,16 +5,17 @@ import helmet from 'helmet';
 import compression from 'compression';
 
 import dbConnection from '../Database/config';
-import { AuthRoutes, CategoryRoutes, ProductsRoutes, UserRoutes } from '../Routes/Index';
+import { AuthRoutes, CategoryRoutes, ProductsRoutes, SearchRoutes, UserRoutes } from '../Routes/Index';
 
 class Server {
     private app: Application;
     private port: string;
     private apiPaths = {
-        auth:    '/api/auth',
+        auth:     '/api/auth',
         category: '/api/categories',
-        product: '/api/products',
-        user:    '/api/users'
+        product:  '/api/products',
+        search:   '/api/search',
+        user:     '/api/users'
     }
 
     constructor() {
@@ -55,6 +56,7 @@ class Server {
         this.app.use( this.apiPaths.auth, AuthRoutes );
         this.app.use( this.apiPaths.category, CategoryRoutes );
         this.app.use( this.apiPaths.product, ProductsRoutes );
+        this.app.use( this.apiPaths.search, SearchRoutes );
         this.app.use( this.apiPaths.user, UserRoutes );
     }
 

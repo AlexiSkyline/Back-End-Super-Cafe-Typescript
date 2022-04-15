@@ -6,11 +6,13 @@
 import AuthRoutes from './AuthRoutes';
 import CategoryRoutes from './CategoryRoutes';
 import ProductsRoutes from './ProductsRoutes';
+import SearchRoutes from './SearchRoutes';
 import UserRoutes from './UsersRoutes';
 
 export {
     AuthRoutes,
     CategoryRoutes,
     ProductsRoutes,
+    SearchRoutes,
     UserRoutes,
 }
